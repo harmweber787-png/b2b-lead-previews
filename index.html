@@ -1,221 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Protected Client Proof Preview &mdash; Verified US B2B Decision-Maker Leads &amp; Enricher</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>US Healthcare Organizations from the Public NPPES Registry – Data Pack + Python Script</title>
+  <meta name="description" content="CSV/JSON export of 60 Texas dental and 20 California mental-health organizations from the public CMS NPPES registry, plus the Python script that builds such lists for any US state.">
   <style>
-    :root {
-      --bg: #090d16;
-      --card: #121a2b;
-      --border: #1e2b45;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --emerald: #10b981;
-      --blue: #3b82f6;
-      --amber: #f59e0b;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      padding: 28px;
-      line-height: 1.5;
-    }
-    .wrap { max-width: 1120px; margin: 0 auto; }
-    .header-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 22px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(16, 185, 129, 0.15);
-      color: var(--emerald);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    h1 { font-size: 20px; font-weight: 800; margin: 8px 0 4px; }
-    .sub { color: var(--muted); font-size: 13px; }
-    .cta-box {
-      background: #0d1526;
-      border: 1px solid var(--emerald);
-      border-radius: 10px;
-      padding: 14px 18px;
-      text-align: right;
-    }
-    .price { font-size: 22px; font-weight: 900; color: var(--emerald); }
-    .btn-pay {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 8px;
-      background: var(--emerald);
-      color: #032219;
-      font-weight: 800;
-      font-size: 13px;
-      padding: 9px 16px;
-      border-radius: 8px;
-      text-decoration: none;
-    }
-    .table-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12.5px;
-      text-align: left;
-    }
-    th, td {
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border);
-    }
-    th {
-      background: #0c1220;
-      color: var(--muted);
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 11px;
-    }
-    .tier-badge {
-      background: rgba(59, 130, 246, 0.16);
-      color: #60a5fa;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-    .locked-row {
-      background: rgba(15, 23, 42, 0.85);
-      color: var(--muted);
-      font-style: italic;
-    }
-  </style>
+  :root { --text:#1f2937; --muted:#4b5563; --line:#e5e7eb; --bg:#f8fafc; --card:#ffffff; --accent:#0f766e; --warn-bg:#fffbeb; --warn-line:#fcd34d; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 960px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 8px; }
+  h2 { font-size: 1.15rem; margin: 0 0 10px; }
+  p { margin: 0 0 10px; }
+  .lead { color: var(--muted); font-size: 1.05rem; margin-bottom: 24px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-bottom: 18px; }
+  .note { background: var(--warn-bg); border-color: var(--warn-line); }
+  ul { margin: 0; padding-left: 20px; } li { margin-bottom: 6px; }
+  .table-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #f1f5f9; font-weight: 600; white-space: nowrap; }
+  .small { color: var(--muted); font-size: 0.8rem; }
+  .buy { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+  .price { font-size: 1.6rem; font-weight: 700; }
+  .button { display: inline-block; background: var(--accent); color: #fff; text-decoration: none; font-weight: 600; padding: 12px 22px; border-radius: 10px; border: 0; font-size: 1rem; cursor: pointer; }
+  .button.secondary { background: #fff; color: var(--accent); border: 1px solid var(--accent); }
+  .files { display: flex; flex-wrap: wrap; gap: 10px; }
+  footer { color: var(--muted); font-size: 0.82rem; margin-top: 28px; }
+  code { background: #f1f5f9; padding: 1px 5px; border-radius: 4px; }
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="header-card">
-      <div>
-        <span class="badge">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <path d="M20 6L9 17l-5-5"></path>
-          </svg>
-          Live Proof Preview &bull; 15 of 60 Verified US Decision-Maker Leads Unlocked
-        </span>
-        <h1>US B2B Practice Decision-Maker &amp; Direct Phone Lead Pack</h1>
-        <p class="sub">
-          Prepared for <strong>B2B Clinic &amp; Agency Outbound Teams</strong> (<code>Quest Labs</code> &bull; <code>/u/Manlgaga</code> &bull; <code>/u/VegetableMany6443</code> &bull; <code>/u/Traditional-Copy-608</code> &bull; <code>/u/Timmytrolls5</code>) &mdash; 100&percnt; real, active US practices with verified Owner/President names, titles, and direct phone numbers. Source script &amp; full CSV/Excel export unlock immediately after payment.
-        </p>
-      </div>
-      <div class="cta-box">
-        <div style="font-size:11px; color:var(--muted); text-transform:uppercase; font-weight:700;">Full Dataset + Python Enricher CLI</div>
-        <div class="price">$95 &ndash; $149 USD</div>
-        <a id="stripePayBtn" href="https://buy.stripe.com/6oU7sNdxi1px0kofzA28800" target="_blank" rel="noopener noreferrer" class="btn-pay">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-            <line x1="2" y1="10" x2="22" y2="10"></line>
-          </svg>
-          Unlock Full CSV &amp; Python Script via Stripe
-        </a>
-      </div>
-    </div>
+<main>
+  <h1>US Healthcare Organizations from the Public NPPES Registry</h1>
+  <p class="lead">A ready-to-use data pack (CSV and JSON) and the Python script that builds it, so you do not have to look up and clean the records yourself.</p>
 
-    <div class="table-card">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>NPI ID</th>
-            <th>Practice / Company Name</th>
-            <th>Verified Decision-Maker</th>
-            <th>Official Role</th>
-            <th>Direct Phone</th>
-            <th>City, State</th>
-            <th>Qualification Tier</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>1</td><td>1043458821</td><td>1-800-GO-DENTIST</td><td><strong>Bradley Bartelli</strong></td><td>President</td><td><code>+1 (361) 851-2828</code></td><td>Corpus Christi, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>2</td><td>1124387196</td><td>1-STOP DENTAL PLLC</td><td><strong>Dr. Victoria Tran, DDS</strong></td><td>Dentist/President</td><td><code>+1 (650) 817-5799</code></td><td>Bedford, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>3</td><td>1568308666</td><td>10 DAY SMILES PLLC</td><td><strong>Dr. Emeka Abazie, DDS</strong></td><td>President</td><td><code>+1 (832) 675-1618</code></td><td>Arlington, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>4</td><td>1801195706</td><td>101 DENTAL &amp; ORTHODONTICS</td><td><strong>Lin Chang</strong></td><td>President</td><td><code>+1 (214) 686-3139</code></td><td>Lewisville, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>5</td><td>1972441327</td><td>1010 DENTAL PLLC</td><td><strong>Dr. Jake Kim, DDS</strong></td><td>Owner</td><td><code>+1 (703) 477-4659</code></td><td>Allen, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>6</td><td>1730591892</td><td>10134 DENTAL PA</td><td><strong>Ravindra Bhakti</strong></td><td>Owner</td><td><code>+1 (281) 561-8868</code></td><td>Sugarland, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>7</td><td>1841987948</td><td>10X SMILES PLLC</td><td><strong>Deepti Namineni</strong></td><td>Managing Member</td><td><code>+1 (646) 241-4964</code></td><td>Arlington, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>8</td><td>1477143444</td><td>110 DENTISTRY &amp; ORTHODONTICS PLLC</td><td><strong>Faith Gaskins</strong></td><td>Director Of Credentialing</td><td><code>+1 (972) 869-3789</code></td><td>Whitehouse, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>9</td><td>1346483062</td><td>121 DENTAL CARE, PA</td><td><strong>Afshin Vahadi</strong></td><td>President</td><td><code>+1 (972) 221-8888</code></td><td>Lewisville, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>10</td><td>1427319609</td><td>123 DENTAL P.A.</td><td><strong>Dr. Casey Tran, DDS</strong></td><td>President</td><td><code>+1 (817) 514-0209</code></td><td>Watauga, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>11</td><td>1215499099</td><td>1488 DENTAL</td><td><strong>Dr.angelica Marquez, DDS</strong></td><td>Owner</td><td><code>+1 (346) 224-7331</code></td><td>Magnolia, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>12</td><td>1609950278</td><td>1960 DENTAL ASSOCIATES</td><td><strong>Dr.imenazzouz</strong></td><td>Owner</td><td><code>+1 (281) 893-6800</code></td><td>Houston, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>13</td><td>1427488022</td><td>1ST CHOICE DENTAL CARE PLLC</td><td><strong>Dr. Khanh Nguyen, DDS</strong></td><td>President</td><td><code>+1 (281) 988-5888</code></td><td>Houston, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>14</td><td>1134389835</td><td>1ST CLASSIC DENTAL PLLC</td><td><strong>Adeyemiuga</strong></td><td>President</td><td><code>+1 (281) 879-4900</code></td><td>Houston, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr><td>15</td><td>1366758038</td><td>1ST DENTAL CARE PLLC</td><td><strong>Dr. Hieu Huynh, DDS</strong></td><td>Owner</td><td><code>+1 (281) 463-0600</code></td><td>Houston, TX</td><td><span class="tier-badge">Tier A (Owner/President)</span></td></tr>
-          <tr class="locked-row">
-            <td colspan="8" style="text-align:center; padding:16px;">
-              Rows 16&ndash;60 + Multi-State Python CLI Enricher locked in preview mode &mdash; <a href="https://buy.stripe.com/6oU7sNdxi1px0kofzA28800" target="_blank" rel="noopener noreferrer" style="color:#10b981;font-weight:700;">Complete Stripe Checkout here</a> for instant automatic download of the unredacted CSV/JSON &amp; automation script.
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <section class="card">
+    <h2>What you get</h2>
+    <ul>
+      <li>60 active dental organizations in Texas</li>
+      <li>20 active California organizations found with the NPPES taxonomy search "Psychologist" (psychologists and other mental-health providers; each record shows its registered taxonomy)</li>
+      <li>For each record: NPI, organization name, authorized official (name and title), phone with its source, city, state, ZIP and taxonomy</li>
+      <li><code>solution.py</code>: a Python 3 script without extra packages that pulls the same kind of list for any US state and taxonomy from the official API</li>
+    </ul>
+  </section>
 
-    <!-- SECTION 2: CAPTCHA-FREE APA PSYCHOLOGIST LOCATOR BYPASS (/u/Stunning-Space8032) -->
-    <div class="table-card" style="margin-top: 24px;">
-      <div style="padding: 18px 20px; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-        <div>
-          <span class="badge">Module 2 &bull; 100&percnt; CAPTCHA-Free Psychologist API (locator.apa.org Alternative for /u/Stunning-Space8032)</span>
-          <h2 style="font-size:17px; font-weight:800; margin-top:6px;">Verified US Clinical Psychologists (PhD / PsyD / Practice Owners + Direct Dial)</h2>
-        </div>
-        <a href="https://buy.stripe.com/6oU7sNdxi1px0kofzA28800" target="_blank" rel="noopener noreferrer" class="btn-pay" style="margin-top:0;">Unlock Psychologist CSV + Python API Script</a>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>NPI ID</th>
-            <th>Psychology Practice Name</th>
-            <th>Psychologist / Owner (PhD / PsyD)</th>
-            <th>Role</th>
-            <th>Direct Phone</th>
-            <th>City, State</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>1</td><td>1881255412</td><td>4 BEHAVIOR CHANGE</td><td><strong>Dr. Lori Brummel, BCBA, LEP</strong></td><td>President</td><td><code>+1 (310) 971-4778</code></td><td>Torrance, CA</td></tr>
-          <tr><td>2</td><td>1417528480</td><td>7 CYCLES OF LIFE</td><td><strong>Dr. Marjan Moinzadeh, PHD</strong></td><td>Owner</td><td><code>+1 (925) 895-2296</code></td><td>San Ramon, CA</td></tr>
-          <tr><td>3</td><td>1205245271</td><td>A &amp; A PSYCHOLOGICAL SERVICES, INC.</td><td><strong>Roza Zograbyan</strong></td><td>CEO</td><td><code>+1 (818) 720-8376</code></td><td>Glendale, CA</td></tr>
-          <tr><td>4</td><td>1275304511</td><td>A &amp; B PSYCHOTHERAPY, INC</td><td><strong>Dr. Ben Culhane, PsyD</strong></td><td>Co-Owner/Psychologist</td><td><code>+1 (909) 285-4263</code></td><td>Newport Beach, CA</td></tr>
-          <tr><td>5</td><td>1003191263</td><td>A CARING MIND, INC</td><td><strong>Dr. Maegan Coleman, MFT, PHD</strong></td><td>Owner</td><td><code>+1 (661) 400-6193</code></td><td>Lancaster, CA</td></tr>
-          <tr><td>6</td><td>1235280751</td><td>A CENTER FOR SELF &amp; RELATIONSHIP DEV.</td><td><strong>Dr. Eugenia Weiss, Psy.D, LCSW</strong></td><td>Director</td><td><code>+1 (949) 218-8800</code></td><td>Huntington Beach, CA</td></tr>
-          <tr><td>7</td><td>1235350570</td><td>A CLINICAL PSYCHOLOGY PRACTICE INC</td><td><strong>Dr. Sabine Gaedt, PhD</strong></td><td>President</td><td><code>+1 (760) 340-2476</code></td><td>Palm Desert, CA</td></tr>
-          <tr><td>8</td><td>1740245489</td><td>A CORPORATE REFERRAL CENTER INC</td><td><strong>Dr. Edward Reed, Ed.D.</strong></td><td>President</td><td><code>+1 (661) 904-0177</code></td><td>Pasadena, CA</td></tr>
-          <tr class="locked-row">
-            <td colspan="7" style="text-align:center; padding:14px;">
-              Remaining Psychologist records + 50-State CAPTCHA-Free Python NPPES Extractor &amp; Senate EFD Session Handshake Fix locked &mdash; <a href="https://buy.stripe.com/6oU7sNdxi1px0kofzA28800" target="_blank" rel="noopener noreferrer" style="color:#10b981;font-weight:700;">Unlock Instant ZIP Download via Stripe</a>.
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <section class="card note">
+    <h2>What this data is, and what it is not</h2>
+    <ul>
+      <li>All records come from the public CMS NPPES NPI Registry, retrieved on 26 October 2026. The registry itself is free; you pay for the cleaned export and the script.</li>
+      <li>The authorized official is the person the organization named in NPPES: often the owner or president, sometimes an office, billing or compliance manager.</li>
+      <li>Phone numbers are as listed in NPPES. Nobody has called or checked them, and many are main office lines rather than direct lines.</li>
+      <li>If you contact these organizations, follow US rules such as the TCPA and the National Do Not Call Registry.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Sample: 10 of 60 Texas records</h2>
+    <div class='table-wrap'><table><tr><th>NPI</th><th>Organization</th><th>Authorized official (NPPES)</th><th>Title</th><th>Phone</th><th>Location</th><th>Taxonomy</th></tr><tr><td>1043458821</td><td>1-800-GO-DENTIST</td><td>Dr. Bradley Bartelli, DMD</td><td>President</td><td>+1 (361) 851-2828<br><span class='small'>authorized official (NPPES)</span></td><td>Corpus Christi, TX 78413</td><td>Dentist, General Practice</td></tr><tr><td>1124387196</td><td>1-STOP DENTAL PLLC</td><td>Dr. Victoria Tran, DDS</td><td>Dentist/President</td><td>+1 (650) 817-5799<br><span class='small'>authorized official (NPPES)</span></td><td>Bedford, TX 76021</td><td>Dentist</td></tr><tr><td>1568308666</td><td>10 DAY SMILES PLLC</td><td>Dr. Emeka Abazie, DDS</td><td>President</td><td>+1 (832) 675-1618<br><span class='small'>authorized official (NPPES)</span></td><td>Arlington, TX 76013</td><td>Dentist, General Practice</td></tr><tr><td>1801195706</td><td>101 DENTAL &amp; ORTHODONTICS</td><td>Dr. Lin Chang, DDS</td><td>President</td><td>+1 (214) 686-3139<br><span class='small'>authorized official (NPPES)</span></td><td>Lewisville, TX 75067</td><td>Dentist</td></tr><tr><td>1972441327</td><td>1010 DENTAL PLLC</td><td>Dr. Jake Kim, DDS</td><td>Owner</td><td>+1 (703) 477-4659<br><span class='small'>authorized official (NPPES)</span></td><td>Allen, TX 75002</td><td>Dentist</td></tr><tr><td>1730591892</td><td>10134 DENTAL PA</td><td>Ravindra Bhakti</td><td>Owner</td><td>+1 (281) 561-8868<br><span class='small'>authorized official (NPPES)</span></td><td>Sugarland, TX 77498</td><td>Dentist, General Practice</td></tr><tr><td>1841987948</td><td>10X SMILES PLLC</td><td>Deepti Namineni</td><td>Managing Member</td><td>+1 (646) 241-4964<br><span class='small'>authorized official (NPPES)</span></td><td>Arlington, TX 76006</td><td>Dentist, General Practice</td></tr><tr><td>1477143444</td><td>110 DENTISTRY &amp; ORTHODONTICS PLLC</td><td>Faith Gaskins</td><td>Director Of Credentialing</td><td>+1 (972) 869-3789<br><span class='small'>authorized official (NPPES)</span></td><td>Whitehouse, TX 75791</td><td>Dentist, General Practice</td></tr><tr><td>1346483062</td><td>121 DENTAL CARE, PA</td><td>Dr. Afshin Vahadi, DDS</td><td>President</td><td>+1 (972) 221-8888<br><span class='small'>authorized official (NPPES)</span></td><td>Lewisville, TX 75057</td><td>Dentist</td></tr><tr><td>1376005322</td><td>1215 THOMASVILLE GARLAND PROFESSIONAL PLLC</td><td>Shawna Garcia</td><td>Director Of Operations</td><td>+1 (214) 938-3749<br><span class='small'>authorized official (NPPES)</span></td><td>Garland, TX 75044</td><td>Dentist, General Practice</td></tr></table></div>
+  </section>
+
+  <section class="card">
+    <h2>Sample: 3 of 20 California records</h2>
+    <div class='table-wrap'><table><tr><th>NPI</th><th>Organization</th><th>Authorized official (NPPES)</th><th>Title</th><th>Phone</th><th>Location</th><th>Taxonomy</th></tr><tr><td>1881255412</td><td>4 BEHAVIOR CHANGE</td><td>Lori Brummel</td><td>President</td><td>+1 (310) 971-4778<br><span class='small'>authorized official (NPPES)</span></td><td>Torrance, CA 90501</td><td>Behavior Analyst</td></tr><tr><td>1417528480</td><td>7 CYCLES OF LIFE</td><td>Dr. Marjan Moinzadeh, PHD</td><td>Owner</td><td>+1 (925) 895-2296<br><span class='small'>authorized official (NPPES)</span></td><td>San Ramon, CA 94583</td><td>Psychologist, Clinical</td></tr><tr><td>1205245271</td><td>A &amp; A PSYCHOLOGICAL SERVICES, INC.</td><td>Roza Zograbyan</td><td>Ceo</td><td>+1 (818) 720-8376<br><span class='small'>authorized official (NPPES)</span></td><td>Glendale, CA 91203</td><td>Psychologist</td></tr></table></div>
+  </section>
+
+  <section class="card buy">
+    <div><div class="price">CHF 95</div><div class="small">Stripe shows the amount in your currency.</div></div>
+    <a class="button" href="https://buy.stripe.com/6oU7sNdxi1px0kofzA28800">Buy with Stripe</a>
+    <p style="flex-basis:100%;margin:0;color:var(--muted)">After payment you are taken to a download page with all files. Please keep that link to yourself.</p>
+  </section>
+
+  <footer>Seller: Bauwerk Digital, Harm Weber, Birmensdorferstrasse 100, 8902 Urdorf, Switzerland. Questions or refunds: reply to your Stripe receipt or write to harmweber787@gmail.com. NPPES is a public registry of the US Centers for Medicare &amp; Medicaid Services (CMS); this pack is not affiliated with CMS.</footer>
+</main>
 </body>
 </html>
