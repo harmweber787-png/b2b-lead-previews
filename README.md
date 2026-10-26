@@ -3,7 +3,7 @@
 - **Source:** Official US CMS NPPES Registry API v2.1 (`status: Active`, Commercial `NPI-2` Organizations)
 - **Verification:** 100% real, active US private practices with named Authorized Official (Owner / President / DDS) and direct 10-digit US dial
 - **Free Proof Sample:** Rows **1 to 15** are completely unmasked below for immediate verification.
-- **Full Delivery (Rows 1 to 60 CSV/JSON + Python NPPES Multi-State Extractor):** Rows **16 to 60** and `solution.py` are unlocked immediately upon checkout.
+- **Full Delivery (Rows 1 to 60 CSV/JSON + Python NPPES Multi-State Extractor):** [Unlock Instant Full Delivery via Stripe Checkout](https://buy.stripe.com/6oU7sNdxi1px0kofzA28800)
 
 ## Part 1: Unmasked Live Proof Sample (Rows 1 - 15)
 
